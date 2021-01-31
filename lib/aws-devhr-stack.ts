@@ -15,5 +15,12 @@ export class AwsDevhrStack extends cdk.Stack {
     // Image Bucket
     const imageBucket = new s3.Bucket(this, imageBucketName)
     new cdk.CfnOutput(this, 'imageBucket', { value: imageBucket.bucketName });
+
+    // DynamoDB
+    const table = new dynamodb.Table(this, 'ImageLabels', {
+      partitionKey: { name: 'image', type: dynamodb.AttributeType.STRING },
+      removalPolicy: cdk.RemovalPolicy.DESTROY
+    });
+    new cdk.CfnOutput(this, 'ddbTable', { value: table.tableName });
   }
 }
