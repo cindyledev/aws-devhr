@@ -7,14 +7,23 @@ import event_sources = require('@aws-cdk/aws-lambda-event-sources');
 import { Duration } from '@aws-cdk/core';
 
 const imageBucketName = 'cdk-rekn-imagebucket'
+const resizedBucketName = imageBucketName + "-resized"
 
 export class AwsDevhrStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     // Create S3 Image Bucket
-    const imageBucket = new s3.Bucket(this, imageBucketName)
+    const imageBucket = new s3.Bucket(this, imageBucketName, {
+      removalPolicy: cdk.RemovalPolicy.DESTROY
+    });
     new cdk.CfnOutput(this, 'imageBucket', { value: imageBucket.bucketName });
+
+    // Create S3 Thumbnail Bucket
+    const resizedBucket = new s3.Bucket(this, resizedBucketName, {
+      removalPolicy: cdk.RemovalPolicy.DESTROY
+    });
+    new cdk.CfnOutput(this, 'resizedBucket', { value: resizedBucket.bucketName });
 
     // Create DynamoDB table for storing image labels
     const table = new dynamodb.Table(this, 'ImageLabels', {
