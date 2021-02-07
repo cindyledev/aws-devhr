@@ -1,6 +1,4 @@
-#
 # Lambda function to detect labels in image using Amazon Rekognition
-#
 
 import logging
 import boto3
@@ -8,9 +6,12 @@ from botocore.exceptions import ClientError
 import os
 from urllib.parse import unquote_plus
 from boto3.dynamodb.conditions import Key, Attr
+import uuid
+from PIL import Image
+
+thumbBucket = os.environ['RESIZEDBUCKET']
 
 # Set the minimum confidence for Amazon Rekognition
-
 minConfidence = 50
 
 """MinConfidence parameter (float) -- Specifies the minimum confidence level for the labels to return. 
@@ -37,6 +38,7 @@ def handler(event, context):
         ourKey = record['s3']['object']['key']
 
         # For each bucket/key, retrieve labels
+        generateThumb(ourBucket, ourKey)
         rekFunction(ourBucket, ourKey)
 
     return

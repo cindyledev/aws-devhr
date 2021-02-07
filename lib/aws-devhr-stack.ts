@@ -32,7 +32,15 @@ export class AwsDevhrStack extends cdk.Stack {
     });
     new cdk.CfnOutput(this, 'ddbTable', { value: table.tableName });
 
-    // Create Lambda function
+    // Create Lambda function for reklayer
+    const layer = new lambda.LayerVersion(this, 'pil', {
+      code: lambda.Code.fromAsset('reklayer'),
+      compatibleRuntimes: [lambda.Runtime.PYTHON_3_7],
+      license: 'Apache-2.0',
+      description: 'A layer to enable the PIL library in our Rekognition Lambda'
+    });
+
+    // Create Lambda function for rekognition
     const rekFn = new lambda.Function(this, 'rekognitionFunction', {
       code: lambda.Code.fromAsset('rekognitionlambda'),
       runtime: lambda.Runtime.PYTHON_3_7,
