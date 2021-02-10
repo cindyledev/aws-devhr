@@ -62,6 +62,20 @@ export class AwsDevhrStack extends cdk.Stack {
       resources: ['*']
     }));
 
+    // Lambda for Synchronous Frontend
+    const serviceFn = new lambda.Function(this, 'serviceFunction', {
+      code: lambda.Code.fromAsset('servicelambda'),
+      runtime: lambda.Runtime.PYTHON_3_7,
+      handler: 'index.handler',
+      environment: {
+        "TABLE": table.tableName,
+        "BUCKET": imageBucket.bucketName,
+        "RESIZEDBUCKET": resizedBucket.bucketName
+      },
+    });
 
+    imageBucket.grantWrite(serviceFn);
+    resizedBucket.grantWrite(serviceFn);
+    table.grantReadWriteData(serviceFn);
   }
 }
