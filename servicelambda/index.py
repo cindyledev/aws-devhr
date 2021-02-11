@@ -68,7 +68,7 @@ def deleteImage(image):
   # Delete Photo and Thumbnail from Amazon S3
   try:
     s3.Object(bucketName, key).delete()
-    s3.Object(resizeBucketName, key).delete()
+    s3.Object(resizedBucketName, key).delete()
 
   except ClientError as e:
     logging.error(e)
