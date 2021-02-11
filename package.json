@@ -11,22 +11,23 @@
     "cdk": "cdk"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "1.87.1",
+    "@aws-cdk/assert": "^1.87.1",
     "@types/jest": "^26.0.10",
-    "@types/node": "10.17.27",
+    "@types/node": "^10.17.27",
+    "aws-cdk": "^1.87.1",
     "jest": "^26.4.2",
-    "ts-jest": "^26.2.0",
-    "aws-cdk": "1.87.1",
+    "ts-jest": "^26.5.1",
     "ts-node": "^9.0.0",
-    "typescript": "~3.9.7"
+    "typescript": "^3.9.9"
   },
   "dependencies": {
-    "@aws-cdk/aws-dynamodb": "^1.87.1",
-    "@aws-cdk/aws-iam": "^1.87.1",
-    "@aws-cdk/aws-lambda": "^1.87.1",
-    "@aws-cdk/aws-lambda-event-sources": "^1.87.1",
-    "@aws-cdk/aws-s3": "^1.87.1",
-    "@aws-cdk/core": "1.87.1",
+    "@aws-cdk/aws-apigateway": "^1.89.0",
+    "@aws-cdk/aws-dynamodb": "^1.89.0",
+    "@aws-cdk/aws-iam": "^1.89.0",
+    "@aws-cdk/aws-lambda": "^1.89.0",
+    "@aws-cdk/aws-lambda-event-sources": "^1.89.0",
+    "@aws-cdk/aws-s3": "^1.89.0",
+    "@aws-cdk/core": "^1.87.1",
     "source-map-support": "^0.5.16"
   }
 }
