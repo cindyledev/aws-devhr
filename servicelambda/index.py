@@ -1,3 +1,5 @@
+# S3 Image Rekognition Frontend Microservice
+
 import logging
 import boto3
 from botocore.exceptions import ClientError

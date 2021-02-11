@@ -47,13 +47,17 @@ export class AwsDevhrStack extends cdk.Stack {
       handler: 'index.handler',
       timeout: Duration.seconds(30),
       memorySize: 1024,
+      layers: [layer],
       environment: {
         "TABLE": table.tableName,
         "BUCKET": imageBucket.bucketName,
+        "RESIZEDBUCKET": resizedBucket.bucketName
       },
     });
+
     rekFn.addEventSource(new event_sources.S3EventSource(imageBucket, { events: [ s3.EventType.OBJECT_CREATED ] }));
     imageBucket.grantRead(rekFn);
+    resizedBucket.grantPut(rekFn);
     table.grantWriteData(rekFn);
 
     rekFn.addToRolePolicy(new iam.PolicyStatement({
