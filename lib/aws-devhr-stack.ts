@@ -7,6 +7,7 @@ import event_sources = require('@aws-cdk/aws-lambda-event-sources');
 import apigw = require('@aws-cdk/aws-apigateway');
 import { Duration } from '@aws-cdk/core';
 import { PassthroughBehavior } from '@aws-cdk/aws-apigateway';
+import { triggerAsyncId } from 'async_hooks';
 
 const imageBucketName = 'cdk-rekn-imagebucket'
 const resizedBucketName = imageBucketName + "-resized"
@@ -126,6 +127,32 @@ export class AwsDevhrStack extends cdk.Stack {
           }
         }
       ]
-    })
+    });
+
+    // API Gateway
+    const imageAPI = api.root.addResource('images');
+
+    // GET /images
+    imageAPI.addMethod('GET', lambdaIntegration, {
+      requestParameters: {
+        'method.request.querystring.action': true,
+        'method.request.querystring.key': true
+      },
+      methodResponses: [
+        {
+          statusCode: "200",
+          responseParameters: {
+            'method.response.header.Access-Control-Allow-Origin': true
+          }
+        },
+        {
+          statusCode: "500",
+          responseParameters: {
+            'method.response.header.Access-Control-Allow-Origin': true
+          }
+        }
+      ]
+    });
+
   }
 }
