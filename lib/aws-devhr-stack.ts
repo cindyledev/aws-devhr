@@ -154,5 +154,27 @@ export class AwsDevhrStack extends cdk.Stack {
       ]
     });
 
+    // DELETE /images
+    imageAPI.addMethod('DELETE', lambdaIntegration, {
+      requestParameters: {
+        'method.request.querystring.action': true,
+        'method.request.querystring.key': true
+      },
+      methodResponses: [
+        {
+          statusCode: "200",
+          responseParameters: {
+            'method.response.header.Access-Control-Allow-Origin': true
+          }
+        },
+        {
+          statusCode: "500",
+          responseParameters: {
+            'method.response.header.Access-Control-Allow-Origin': true
+          }
+        }
+      ]
+    });
+
   }
 }
