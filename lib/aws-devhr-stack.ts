@@ -7,7 +7,6 @@ import event_sources = require('@aws-cdk/aws-lambda-event-sources');
 import apigw = require('@aws-cdk/aws-apigateway');
 import { Duration } from '@aws-cdk/core';
 import { PassthroughBehavior } from '@aws-cdk/aws-apigateway';
-import { triggerAsyncId } from 'async_hooks';
 
 const imageBucketName = 'cdk-rekn-imagebucket'
 const resizedBucketName = imageBucketName + "-resized"
@@ -102,10 +101,7 @@ export class AwsDevhrStack extends cdk.Stack {
         'integration.request.querystring.key': 'method.request.querystring.key'
       },
       requestTemplates: {
-        'application/json': JSON.stringify({ 
-          action: "$util.escapeJavaScript($input.params('action'))",
-          key: "$util.escapeJavascript($input.params('key'))"
-        })
+        'application/json': JSON.stringify({ action: "$util.escapeJavaScript($input.params('action'))", key: "$util.escapeJavascript($input.params('key'))" })
       },
       passthroughBehavior: PassthroughBehavior.WHEN_NO_TEMPLATES,
       integrationResponses: [
