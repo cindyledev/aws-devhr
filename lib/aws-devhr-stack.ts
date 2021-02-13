@@ -4,7 +4,9 @@ import lambda = require('@aws-cdk/aws-lambda');
 import dynamodb = require('@aws-cdk/aws-dynamodb');
 import iam = require('@aws-cdk/aws-iam');
 import event_sources = require('@aws-cdk/aws-lambda-event-sources');
+import apigw = require('@aws-cdk/aws-apigateway');
 import { Duration } from '@aws-cdk/core';
+import { PassthroughBehavior } from '@aws-cdk/aws-apigateway';
 
 const imageBucketName = 'cdk-rekn-imagebucket'
 const resizedBucketName = imageBucketName + "-resized"
@@ -81,5 +83,14 @@ export class AwsDevhrStack extends cdk.Stack {
     imageBucket.grantWrite(serviceFn);
     resizedBucket.grantWrite(serviceFn);
     table.grantReadWriteData(serviceFn);
+
+    const api = new apigw.LambdaRestApi(this, 'imageAPI', {
+      defaultCorsPreflightOptions: {
+        allowOrigins: apigw.Cors.ALL_ORIGINS,
+        allowMethods: apigw.Cors.ALL_METHODS
+      },
+      handler: serviceFn,
+      proxy: false,
+    });
   }
 }
