@@ -92,5 +92,40 @@ export class AwsDevhrStack extends cdk.Stack {
       handler: serviceFn,
       proxy: false,
     });
+
+    // Create Amazon API Gateway with AWS Lambda Integration
+    const lambdaIntegration = new apigw.LambdaIntegration(serviceFn, {
+      proxy: false,
+      requestParameters: {
+        'integration.request.querystring.action': 'method.request.querystring.action',
+        'integration.request.querystring.key': 'method.request.querystring.key'
+      },
+      requestTemplates: {
+        'application/json': JSON.stringify({ 
+          action: "$util.escapeJavaScript($input.params('action'))",
+          key: "$util.escapeJavascript($input.params('key'))"
+        })
+      },
+      passthroughBehavior: PassthroughBehavior.WHEN_NO_TEMPLATES,
+      integrationResponses: [
+        {
+          statusCode: "200",
+          // Map response parameters
+          // - Destination parameters (the key) are the response parameters (used in mappings)
+          // - Source parameters (the value) are the integration response parameters or expressions
+          responseParameters: {
+            'method.response.header.Access-Control-Allow-Origin': "'*'"
+          }
+        },
+        {
+          // For errors, if error message is not empty, get the error data
+          selectionPattern: "(\n|.)+",
+          statusCode: "500",
+          responseParameters: {
+            'method.response.header.Access-Control-Allow-Origin': "'*'"
+          }
+        }
+      ]
+    })
   }
 }
